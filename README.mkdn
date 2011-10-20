@@ -1,0 +1,56 @@
+Levenshtein Distance for the 3x4 Phone Keypads
+==============================================
+This here should find a kind of Levenshtein distance for words, but it is
+based, as is my habit, on the layout of the keyboard, rather than being a
+naïve implementation.
+It is not generalised. This time, it is strictly for the phone.
+
+It creates `String#-`, which *is* commutative, unlike the traditional `-`.
+So,
+
+```ruby
+'man' - 'boy' = 'boy' - 'man'
+```
+
+Now:
+
+```ruby
+'man' - 'men' = 2
+```
+
+And:
+
+```ruby
+'man' - 'mbn' = 1
+```
+
+Which makes `'mbn'` have a smaller distance from `'man'`, because they share a key on the phone (it could be a case of one pressing the key one time too many).
+However:
+
+```ruby
+'man' - 'med' = 4
+```
+
+Which places `'men'` closer to `'man'`, in case of bad spelling, than `'med'`.
+
+```ruby
+'man' - 'man' = 0
+```
+
+For there is no distance between the same two words.
+
+An arbitrary/heuristic way to decide, sans interaction, which of the words
+in a list were intended, if all of them were missed, is to take the one that
+is closest, of those that are within `< 3` in distance. If you get only one,
+use that.
+
+The `-` operator has an unspecified time complexity that is huge.
+It is at least *`O(5n(n^2))`* on the shortest string.
+Please use only with short strings, and sparingly. It has not been optimised
+for speed, just for the comfort of those who may have made the spelling
+errors (not even for the programmer).
+
+TODO
+----
+1.  Add accented characters to the keypad, when I get a text editor that
+    permits it.
